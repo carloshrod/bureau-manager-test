@@ -28,8 +28,6 @@ const saltRounds = 10;
 //const CryptoJS = require("crypto-js");
 //const secretKeyAES = process.env.SECRET_KEY;
 
-console.log(MYSQLUSER);
-
 const connection = mysql.createConnection(`
   mysql://${MYSQLUSER}:${MYSQL_ROOT_PASSWORD}@${MYSQLHOST}:${MYSQLPORT}/${MYSQL_DATABASE}
 `);
@@ -579,7 +577,7 @@ app.post(`/api/registrarRecibo`, (req, res) => {
   const cuota_penalizacionAES = CryptoJS.AES.encrypt(cuota_penalizacion, secretKeyAES).toString();
   const cuota_reservaAES = CryptoJS.AES.encrypt(cuota_reserva, secretKeyAES).toString();
   const cuota_adeudosAES = CryptoJS.AES.encrypt(cuota_adeudos, secretKeyAES).toString();*/
-  const sql = `INSERT INTO reciboCompleto (id_condominio, id_edificio, id_departamento, id_inquilino, nombre_completo_inquilino, no_recibo, fecha, fecha_formateada, mes_pago, concepto_pago, cuota_ordinaria, cuota_penalizacion, cuota_extraordinaria, cuota_reserva, cuota_adeudos, total_pagar, total_pagar_letra, id_administrador) VALUES ?`;
+  const sql = `INSERT INTO recibocompleto (id_condominio, id_edificio, id_departamento, id_inquilino, nombre_completo_inquilino, no_recibo, fecha, fecha_formateada, mes_pago, concepto_pago, cuota_ordinaria, cuota_penalizacion, cuota_extraordinaria, cuota_reserva, cuota_adeudos, total_pagar, total_pagar_letra, id_administrador) VALUES ?`;
   const values = recibos.map((recibo) => [
     recibo.id_condominio,
     recibo.id_edificio,
@@ -658,7 +656,7 @@ app.post(`/api/enviarRecibosCorreoElectronico`, (req, res) => {
         e.nombre_edificio,
         d.numero_departamento 
       FROM 
-        reciboCompleto AS rc 
+        recibocompleto AS rc 
       INNER JOIN departamento AS d ON rc.id_departamento = d.id_departamento 
       INNER JOIN edificio AS e ON d.id_edificio = e.id_edificio 
       INNER JOIN condominio AS c ON e.id_condominio = c.id_condominio 
@@ -784,7 +782,7 @@ app.post(`/api/generarPDFMasivo`, async (req, res) => {
         e.nombre_edificio,
         d.numero_departamento 
       FROM 
-        reciboCompleto AS rc 
+        recibocompleto AS rc 
       INNER JOIN departamento AS d ON rc.id_departamento = d.id_departamento 
       INNER JOIN edificio AS e ON d.id_edificio = e.id_edificio 
       INNER JOIN condominio AS c ON e.id_condominio = c.id_condominio 
@@ -998,7 +996,7 @@ app.get(`/api/getRecibos/:id_administrador`, (req, res) => {
   const sql = `
     SELECT r.*, i.correo_inquilino, 
            i.correo_inquilino IS NOT NULL AS tiene_correo
-    FROM reciboCompleto r
+    FROM recibocompleto r
     JOIN inquilino i ON r.id_inquilino = i.id_inquilino
     WHERE r.id_administrador = ?;
   `;
@@ -1195,7 +1193,7 @@ app.get(`/api/getRecibosFiltrados/:id_administrador`, (req, res) => {
 
   let sql = `
     SELECT r.*, i.correo_inquilino IS NOT NULL AS tiene_correo
-    FROM reciboCompleto r
+    FROM recibocompleto r
     JOIN inquilino i ON r.id_inquilino = i.id_inquilino
     WHERE r.id_administrador = ?
   `;
@@ -1290,7 +1288,7 @@ app.get(`/api/verificarRecibo/:id_condominio/:no_recibo`, (req, res) => {
   const { id_condominio, no_recibo } = req.params;
   const sql = `
     SELECT COUNT(*) AS count
-    FROM reciboCompleto
+    FROM recibocompleto
     WHERE id_condominio = ? AND no_recibo = ?;
   `;
   connection.query(sql, [id_condominio, no_recibo], (error, results) => {
@@ -1381,8 +1379,8 @@ app.post(`/api/eliminarRecibos`, (req, res) => {
           }
 
           // Eliminación en recibocompleto
-          const deleteReciboCompletoSql = `DELETE FROM recibocompleto WHERE id_recibo IN (${placeholders})`;
-          connection.query(deleteReciboCompletoSql, ids, (error) => {
+          const deleterecibocompletoSql = `DELETE FROM recibocompleto WHERE id_recibo IN (${placeholders})`;
+          connection.query(deleterecibocompletoSql, ids, (error) => {
             if (error) {
               return connection.rollback(() => {
                 console.error("Error al eliminar recibos completos:", error);
