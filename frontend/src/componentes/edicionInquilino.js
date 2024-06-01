@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { API_URL } from "../config.js";
+import { REACT_APP_SERVER_URL } from "../config.js";
 
 function EditoInquilino() {
   const [formulario, setFormulario] = useState({
@@ -33,7 +33,7 @@ function EditoInquilino() {
     const authData = JSON.parse(localStorage.getItem("authData"));
     const id_administrador = parseInt(authData?.id);
     axios
-      .get(`${API_URL}/api/getCondominios/${id_administrador}`)
+      .get(`${REACT_APP_SERVER_URL}/api/getCondominios/${id_administrador}`)
       .then((response) => {
         if (response.data.length === 0) {
           setEdificios([]);
@@ -58,7 +58,10 @@ function EditoInquilino() {
           diccionario["id_condominio"] = parseInt(selectedCondominio);
 
           axios
-            .post(`${API_URL}/api/getEdificiosbyCondominio`, diccionario)
+            .post(
+              `${REACT_APP_SERVER_URL}/api/getEdificiosbyCondominio`,
+              diccionario
+            )
             .then((resultado) => {
               if (resultado.data.length === 0) {
                 setEdificios([]);
@@ -83,7 +86,7 @@ function EditoInquilino() {
 
                 axios
                   .post(
-                    `${API_URL}/api/getDepartamentosbyEdificios`,
+                    `${REACT_APP_SERVER_URL}/api/getDepartamentosbyEdificios`,
                     diccionario2
                   )
                   .then((resultado) => {
@@ -111,7 +114,7 @@ function EditoInquilino() {
 
                       axios
                         .post(
-                          `${API_URL}/api/getInquilinosbyDepartamento`,
+                          `${REACT_APP_SERVER_URL}/api/getInquilinosbyDepartamento`,
                           diccionario3
                         )
                         .then((resultado) => {
@@ -188,7 +191,10 @@ function EditoInquilino() {
       diccionario["id_condominio"] = selectedCondominio.id_condominio;
 
       axios
-        .post(`${API_URL}/api/getEdificiosbyCondominio`, diccionario)
+        .post(
+          `${REACT_APP_SERVER_URL}/api/getEdificiosbyCondominio`,
+          diccionario
+        )
         .then((resultado) => {
           if (resultado.data.length === 0) {
             setEdificios([]);
@@ -211,7 +217,10 @@ function EditoInquilino() {
             diccionario2["id_edificio"] = parseInt(selectedEdifcio);
 
             axios
-              .post(`${API_URL}/api/getDepartamentosbyEdificios`, diccionario2)
+              .post(
+                `${REACT_APP_SERVER_URL}/api/getDepartamentosbyEdificios`,
+                diccionario2
+              )
               .then((resultado) => {
                 if (resultado.data.length === 0) {
                   setDepartamentos([]);
@@ -234,7 +243,7 @@ function EditoInquilino() {
 
                   axios
                     .post(
-                      `${API_URL}/api/getInquilinosbyDepartamento`,
+                      `${REACT_APP_SERVER_URL}/api/getInquilinosbyDepartamento`,
                       diccionario3
                     )
                     .then((resultado) => {
@@ -293,7 +302,10 @@ function EditoInquilino() {
       diccionario["id_edificio"] = selectedEdificio.id_edificio;
 
       axios
-        .post(`${API_URL}/api/getDepartamentosbyEdificios`, diccionario)
+        .post(
+          `${REACT_APP_SERVER_URL}/api/getDepartamentosbyEdificios`,
+          diccionario
+        )
         .then((resultado) => {
           if (resultado.data.length === 0) {
             setDepartamentos([]);
@@ -315,7 +327,10 @@ function EditoInquilino() {
             diccionario3["id_departamento"] = parseInt(selectedInquilino);
 
             axios
-              .post(`${API_URL}/api/getInquilinosbyDepartamento`, diccionario3)
+              .post(
+                `${REACT_APP_SERVER_URL}/api/getInquilinosbyDepartamento`,
+                diccionario3
+              )
               .then((resultado) => {
                 if (resultado.data.length === 0) {
                   setInquilinos([]);
@@ -372,7 +387,10 @@ function EditoInquilino() {
       diccionario["id_departamento"] = selectedDepartamento.id_departamento;
 
       axios
-        .post(`${API_URL}/api/getInquilinosbyDepartamento`, diccionario)
+        .post(
+          `${REACT_APP_SERVER_URL}/api/getInquilinosbyDepartamento`,
+          diccionario
+        )
         .then((resultado) => {
           if (resultado.data.length === 0) {
             setInquilinos([]);
@@ -474,7 +492,7 @@ function EditoInquilino() {
 
     try {
       const resultado = await axios.post(
-        `${API_URL}/api/actualizarInquilino`,
+        `${REACT_APP_SERVER_URL}/api/actualizarInquilino`,
         formulario
       );
       if (resultado.data === 200) {

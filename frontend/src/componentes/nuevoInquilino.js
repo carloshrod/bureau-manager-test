@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { API_URL } from "../config.js";
+import { REACT_APP_SERVER_URL } from "../config.js";
 
 function NuevoInquilino() {
   const [formulario, setFormulario] = useState({
@@ -47,7 +47,7 @@ function NuevoInquilino() {
     while (!codigoUnico) {
       codigo_inquilino = generarCodigo(8);
       const respuestaCodigo = await axios.get(
-        `${API_URL}/api/verificarCodigoInquilino/${codigo_inquilino}`
+        `${REACT_APP_SERVER_URL}/api/verificarCodigoInquilino/${codigo_inquilino}`
       );
       codigoUnico = !respuestaCodigo.data.existe;
     }
@@ -58,7 +58,7 @@ function NuevoInquilino() {
     const authData = JSON.parse(localStorage.getItem("authData"));
     const id_administrador = parseInt(authData?.id);
     axios
-      .get(`${API_URL}/api/getCondominios/${id_administrador}`)
+      .get(`${REACT_APP_SERVER_URL}/api/getCondominios/${id_administrador}`)
       .then((response) => {
         if (response.data.length === 0) {
           setEdificios([]);
@@ -78,7 +78,10 @@ function NuevoInquilino() {
           diccionario["id_condominio"] = parseInt(selectedCondominio);
 
           axios
-            .post(`${API_URL}/api/getEdificiosbyCondominio`, diccionario)
+            .post(
+              `${REACT_APP_SERVER_URL}/api/getEdificiosbyCondominio`,
+              diccionario
+            )
             .then((resultado) => {
               if (resultado.data.length === 0) {
                 setEdificios([]);
@@ -99,7 +102,7 @@ function NuevoInquilino() {
 
                 axios
                   .post(
-                    `${API_URL}/api/getDepartamentosbyEdificios`,
+                    `${REACT_APP_SERVER_URL}/api/getDepartamentosbyEdificios`,
                     diccionario2
                   )
                   .then((resultado) => {
@@ -158,7 +161,10 @@ function NuevoInquilino() {
       diccionario["id_condominio"] = selectedCondominio.id_condominio;
 
       axios
-        .post(`${API_URL}/api/getEdificiosbyCondominio`, diccionario)
+        .post(
+          `${REACT_APP_SERVER_URL}/api/getEdificiosbyCondominio`,
+          diccionario
+        )
         .then((resultado) => {
           if (resultado.data.length === 0) {
             setEdificios([]);
@@ -176,7 +182,10 @@ function NuevoInquilino() {
             diccionario2["id_edificio"] = parseInt(selectedEdifcio);
 
             axios
-              .post(`${API_URL}/api/getDepartamentosbyEdificios`, diccionario2)
+              .post(
+                `${REACT_APP_SERVER_URL}/api/getDepartamentosbyEdificios`,
+                diccionario2
+              )
               .then((resultado) => {
                 if (resultado.data.length === 0) {
                   setDepartamentos([]);
@@ -217,7 +226,10 @@ function NuevoInquilino() {
       diccionario["id_edificio"] = selectedEdificio.id_edificio;
 
       axios
-        .post(`${API_URL}/api/getDepartamentosbyEdificios`, diccionario)
+        .post(
+          `${REACT_APP_SERVER_URL}/api/getDepartamentosbyEdificios`,
+          diccionario
+        )
         .then((resultado) => {
           if (resultado.data.length === 0) {
             setDepartamentos([]);
@@ -301,7 +313,7 @@ function NuevoInquilino() {
 
     try {
       const response = await axios.post(
-        `${API_URL}/api/getInquilinosbyDepartamento`,
+        `${REACT_APP_SERVER_URL}/api/getInquilinosbyDepartamento`,
         { id_departamento: formulario.id_departamento }
       );
       if (response.data.length > 0) {
@@ -313,7 +325,7 @@ function NuevoInquilino() {
       const codigo = await verificarYGenerarCodigo();
       const nuevoFormulario = { ...formulario, codigo_inquilino: codigo };
       const resultado = await axios.post(
-        `${API_URL}/api/registrarInquilino`,
+        `${REACT_APP_SERVER_URL}/api/registrarInquilino`,
         nuevoFormulario
       );
       if (resultado.data === 200) {

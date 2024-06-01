@@ -4,8 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../img/logo2.png";
 import { useAuth } from "../AuthContext.js";
-import { API_URL } from "../config.js";
-//${API_URL}/api/api
+import { REACT_APP_SERVER_URL } from "../config.js";
+//${REACT_APP_SERVER_URL}/api/api
 
 function Formulario() {
   const [formulario, setFormulario] = useState({
@@ -74,7 +74,7 @@ function Formulario() {
     ) {
       try {
         const resultado = await axios.post(
-          `${API_URL}/api/getAdmin`,
+          `${REACT_APP_SERVER_URL}/api/getAdmin`,
           formulario
         );
 
